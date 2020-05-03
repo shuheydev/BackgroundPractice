@@ -10,6 +10,13 @@ namespace BackgroundPractice
 {
     public class TaskCounter
     {
+        private int _notificationNumber;
+        private INotificationManager _notificationManager;
+        public TaskCounter()
+        {
+            _notificationManager = DependencyService.Get<INotificationManager>();
+        }
+
         public async Task RunCounter(CancellationToken token)
         {
             await Task.Run(async () =>
@@ -28,6 +35,14 @@ namespace BackgroundPractice
                     {
                         MessagingCenter.Send<TickedMessage>(message, nameof(TickedMessage));
                     });
+
+                    if (i % 10 == 0)
+                    {
+                        _notificationNumber++;
+                        string title = $"Local Notification #{_notificationNumber}";
+                        string notifyMessage = $"You have now receive {_notificationNumber} nogirications";
+                        _notificationManager.ScheduleNotification(title, notifyMessage);
+                    }
                 }
             }, token);
         }

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Visual="Material"
     mc:Ignorable="d">
     <ContentPage.Padding>
         <OnPlatform
@@ -15,7 +16,8 @@
 
     <ContentPage.Content>
         <StackLayout>
-            <Button x:Name="longRunningTask" Text="Start Long Running Task" />
+            <Button x:Name="notificationTest" Text="Notification Test" />
+            <Button x:Name="startLongRunningTask" Text="Start Long Running Task" />
             <Button x:Name="stopLongRunningTask" Text="Stop Long Running Task" />
             <Label
                 x:Name="ticker"

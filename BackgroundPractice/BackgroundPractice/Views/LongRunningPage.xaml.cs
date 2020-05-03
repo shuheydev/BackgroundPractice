@@ -16,7 +16,7 @@ namespace BackgroundPractice
         {
             InitializeComponent();
 
-            longRunningTask.Clicked += (s, e) =>
+            startLongRunningTask.Clicked += (s, e) =>
             {
                 var message = new StartLongRunningTaskMessage();
                 MessagingCenter.Send(message, nameof(StartLongRunningTaskMessage));
@@ -28,7 +28,17 @@ namespace BackgroundPractice
                 MessagingCenter.Send(message, nameof(StopLongRunningTaskMessage));
             };
 
+            notificationTest.Clicked += (s, e) =>
+            {
+                _notificationNumber++;
+                string title = $"Local Notification #{_notificationNumber}";
+                string message = $"You have now receive {_notificationNumber} nogirications";
+                _notificationManager.ScheduleNotification(title, message);
+            };
+
             HandleReceiveMessages();
+
+            InitializeNotificationManager();
         }
 
         private void HandleReceiveMessages()
@@ -49,5 +59,32 @@ namespace BackgroundPractice
                 });
             });
         }
+
+
+        #region Notification
+        INotificationManager _notificationManager;
+        int _notificationNumber = 0;
+
+        private void InitializeNotificationManager()
+        {
+            _notificationManager = DependencyService.Get<INotificationManager>();
+            _notificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var eventData = (NotificationEventArgs)eventArgs;
+                ShowNotification(eventData.Title, eventData.Message);
+            };
+        }
+
+        private void ShowNotification(string title, string message)
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var msg = new Label()
+                {
+                    Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
+                };
+            });
+        }
+        #endregion
     }
 }
