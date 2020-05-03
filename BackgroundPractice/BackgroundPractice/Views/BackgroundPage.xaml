@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="BackgroundPractice.BackgroundPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Padding>
+        <OnPlatform
+            x:TypeArguments="Thickness"
+            Android="5, 20, 5, 5"
+            iOS="5, 20, 5, 5" />
+    </ContentPage.Padding>
+
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label FontSize="Large" Text="Sleep Date: " />
+            <Label x:Name="SleepDateLabel" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label FontSize="Large" Text="First Name: " />
+            <Entry x:Name="FirstNameEntry" HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+
+        <Label
+            FontSize="Medium"
+            HorizontalOptions="StartAndExpand"
+            Text="Enter a name, and then either background or terminate the app. The first name and the sleep time will persist between background/foreground."
+            VerticalOptions="StartAndExpand" />
+
+    </StackLayout>
+</ContentPage>
