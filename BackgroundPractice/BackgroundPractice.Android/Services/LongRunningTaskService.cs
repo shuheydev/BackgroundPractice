@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
+using Android.App.Job;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -63,6 +64,52 @@ namespace BackgroundPractice.Droid.Services
                 _cts.Cancel();
             }
             base.OnDestroy();
+        }
+    }
+
+    [Service(Permission = "android.permission.BIND_JOB_SERVICE")]
+    public class CountJob : JobService
+    {
+        CancellationTokenSource _cts;
+
+        public override bool OnStartJob(JobParameters @params)
+        {
+            _cts = new CancellationTokenSource();
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    var counter = new TaskCounter();
+                    counter.RunCounter(_cts.Token).Wait();
+                }
+                catch (Android.OS.OperationCanceledException)
+                {
+
+                }
+                finally
+                {
+                    if (_cts.IsCancellationRequested)
+                    {
+                        var message = new CancelledMessage();
+                        MainThread.BeginInvokeOnMainThread(() => MessagingCenter.Send(message, nameof(CancelledMessage)));
+                    }
+                }
+            }, _cts.Token);
+
+            return true;
+        }
+
+        public override bool OnStopJob(JobParameters @params)
+        {
+            if (_cts != null)
+            {
+                _cts.Token.ThrowIfCancellationRequested();
+
+                _cts.Cancel();
+            }
+
+            return false;
         }
     }
 }

@@ -11,6 +11,8 @@ using System.Threading;
 using Xamarin.Forms.Internals;
 using Xamarin.Forms;
 using BackgroundPractice.Droid.Services;
+using Android.App.Job;
+using Android.Support.Design.Widget;
 
 namespace BackgroundPractice.Droid
 {
@@ -31,18 +33,39 @@ namespace BackgroundPractice.Droid
             WireUpLongRunningTask();
         }
 
+
+        JobScheduler jobScheduler;
         private void WireUpLongRunningTask()
         {
             MessagingCenter.Subscribe<StartLongRunningTaskMessage>(this, nameof(StartLongRunningTaskMessage), async message =>
             {
-                var intent = new Intent(this, typeof(LongRunningTaskService));
-                StartService(intent);
+                //var intent = new Intent(this, typeof(LongRunningTaskService));
+                //StartService(intent);
+                var javaClass = Java.Lang.Class.FromType(typeof(CountJob));
+                var componentName = new ComponentName(this, javaClass);
+                var jobInfo=new JobInfo.Builder(1, componentName).Build();
+
+                jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
+                var scheduleResult = jobScheduler.Schedule(jobInfo);
+
+                if (JobScheduler.ResultSuccess == scheduleResult)
+                {
+                    var snackBar = Snackbar.Make(FindViewById(Android.Resource.Id.Content), "スケジュール成功", Snackbar.LengthShort);
+                    snackBar.Show();
+                }
+                else
+                {
+                    var snackBar = Snackbar.Make(FindViewById(Android.Resource.Id.Content), "スケジュール失敗", Snackbar.LengthShort);
+                    snackBar.Show();
+                }
             });
 
             MessagingCenter.Subscribe<StopLongRunningTaskMessage>(this, nameof(StopLongRunningTaskMessage), message =>
             {
-                var intent = new Intent(this, typeof(LongRunningTaskService));
-                StopService(intent);
+                //var intent = new Intent(this, typeof(LongRunningTaskService));
+                //StopService(intent);
+
+                jobScheduler.Cancel(1);
             });
         }
 
