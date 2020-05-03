@@ -72,6 +72,8 @@ namespace BackgroundPractice.Droid.Services
     {
         CancellationTokenSource _cts;
 
+        static TaskCounter _counter=new TaskCounter();
+
         public override bool OnStartJob(JobParameters @params)
         {
             _cts = new CancellationTokenSource();
@@ -80,8 +82,9 @@ namespace BackgroundPractice.Droid.Services
             {
                 try
                 {
-                    var counter = new TaskCounter();
-                    counter.RunCounter(_cts.Token).Wait();
+                    //var counter = new TaskCounter();
+                    //counter.RunCounter(_cts.Token).Wait();
+                    _counter.IncrementCounter(_cts.Token);
                 }
                 catch (Android.OS.OperationCanceledException)
                 {

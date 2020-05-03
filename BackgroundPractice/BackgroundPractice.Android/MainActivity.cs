@@ -43,7 +43,12 @@ namespace BackgroundPractice.Droid
                 //StartService(intent);
                 var javaClass = Java.Lang.Class.FromType(typeof(CountJob));
                 var componentName = new ComponentName(this, javaClass);
-                var jobInfo=new JobInfo.Builder(1, componentName).Build();
+                var jobBuilder=new JobInfo.Builder(1, componentName);
+                var jobInfo = jobBuilder
+                //.SetPersisted(true)
+                .SetPeriodic(1)
+                .SetRequiredNetworkType(NetworkType.None)
+                .Build();
 
                 jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
                 var scheduleResult = jobScheduler.Schedule(jobInfo);

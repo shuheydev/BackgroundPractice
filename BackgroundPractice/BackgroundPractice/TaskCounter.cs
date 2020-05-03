@@ -10,7 +10,7 @@ namespace BackgroundPractice
 {
     public class TaskCounter
     {
-        private int _notificationNumber;
+        private int _notificationNumber=0;
         private INotificationManager _notificationManager;
         public TaskCounter()
         {
@@ -36,15 +36,42 @@ namespace BackgroundPractice
                         MessagingCenter.Send<TickedMessage>(message, nameof(TickedMessage));
                     });
 
+                    _notificationNumber++;
+
                     if (i % 10 == 0)
-                    {
-                        _notificationNumber++;
+                    { 
                         string title = $"Local Notification #{_notificationNumber}";
                         string notifyMessage = $"You have now receive {_notificationNumber} nogirications";
                         _notificationManager.ScheduleNotification(title, notifyMessage);
                     }
                 }
             }, token);
+        }
+
+
+        private int _counter = 0;
+        public void IncrementCounter(CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            var message = new TickedMessage
+            {
+                Message = _counter.ToString()
+            };
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                MessagingCenter.Send<TickedMessage>(message, nameof(TickedMessage));
+            });
+
+            if(_counter% 10==0)
+            {
+                string title = $"Local Notification #{_notificationNumber}";
+                string notifyMessage = $"You have now receive {_notificationNumber} nogirications";
+                _notificationManager.ScheduleNotification(title, notifyMessage);
+            }
+
+            _notificationNumber++;
         }
     }
 }
