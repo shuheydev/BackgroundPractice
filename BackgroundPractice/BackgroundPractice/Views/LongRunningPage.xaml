@@ -16,6 +16,7 @@
 
     <ContentPage.Content>
         <StackLayout>
+            <Button x:Name="GeolocationTest" Text="GPS Test" />
             <Button x:Name="notificationTest" Text="Notification Test" />
             <Button x:Name="startLongRunningTask" Text="Start Long Running Task" />
             <Button x:Name="stopLongRunningTask" Text="Stop Long Running Task" />

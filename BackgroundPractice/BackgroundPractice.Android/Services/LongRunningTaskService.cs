@@ -45,8 +45,11 @@ namespace BackgroundPractice.Droid.Services
             {
                 try
                 {
-                    var counter = new TaskCounter();
-                    counter.RunCounter(_cts.Token).Wait();
+                    var locationTask = new LocationTask();
+                    locationTask.GetLocation(_cts.Token).Wait();
+
+                    //var counter = new TaskCounter();
+                    //counter.RunCounter(_cts.Token).Wait();
                 }
                 catch (Android.OS.OperationCanceledException)
                 {

@@ -36,6 +36,23 @@ namespace BackgroundPractice
                 _notificationManager.ScheduleNotification(title, message);
             };
 
+            GeolocationTest.Clicked += async (s, e) =>
+            {
+                //Check permission
+                var status = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
+                if(status!=PermissionStatus.Granted)
+                {
+                    var requestResult = await Permissions.RequestAsync<Permissions.LocationAlways>();
+                    if (requestResult != PermissionStatus.Granted)
+                        return;
+                }
+
+                var location = await Geolocation.GetLastKnownLocationAsync();
+                MainThread.BeginInvokeOnMainThread(() => {
+                    ticker.Text = location.Latitude.ToString();
+                });
+            };
+
             HandleReceiveMessages();
 
             InitializeNotificationManager();

@@ -33,7 +33,7 @@ namespace BackgroundPractice.Droid
 
         private void WireUpLongRunningTask()
         {
-            MessagingCenter.Subscribe<StartLongRunningTaskMessage>(this, nameof(StartLongRunningTaskMessage), async message =>
+            MessagingCenter.Subscribe<StartLongRunningTaskMessage>(this, nameof(StartLongRunningTaskMessage), message =>
             {
                 var intent = new Intent(this, typeof(LongRunningTaskService));
                 StartService(intent);
