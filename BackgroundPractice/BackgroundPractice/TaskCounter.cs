@@ -25,7 +25,7 @@ namespace BackgroundPractice
                 {
                     token.ThrowIfCancellationRequested();
 
-                    await Task.Delay(250);
+                    await Task.Delay(1000);
                     var message = new TickedMessage
                     {
                         Message = i.ToString()

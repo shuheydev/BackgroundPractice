@@ -6,8 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 using Xamarin.Essentials;
@@ -18,6 +20,15 @@ namespace BackgroundPractice.Droid.Services
     [Service]
     public class LongRunningTaskService : Service
     {
+        readonly string _channelId = "foreground";
+        readonly string _channelName = "foreground";
+        readonly string _channelDescription = "The foreground channel for notifications";
+        readonly int _pendingIntentId = 1;
+
+        NotificationManager _notificationManager;
+        bool _channelInitialized = false;
+
+
         CancellationTokenSource _cts;
 
         public override IBinder OnBind(Intent intent)
@@ -51,7 +62,29 @@ namespace BackgroundPractice.Droid.Services
                 }
             }, _cts.Token);
 
-            return StartCommandResult.Sticky;
+            if (!_channelInitialized)
+            {
+                CreateNotificationChannel();
+            }
+
+            Intent foregroundNotificationIntent = new Intent(Android.App.Application.Context, typeof(MainActivity));
+
+            PendingIntent pendingIntent = PendingIntent.GetActivity(Android.App.Application.Context, _pendingIntentId, foregroundNotificationIntent, PendingIntentFlags.OneShot);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(Android.App.Application.Context, _channelId)
+                .SetContentIntent(pendingIntent)
+                .SetContentTitle("hello")
+                .SetContentText("world")
+                .SetLargeIcon(BitmapFactory.DecodeResource(Android.App.Application.Context.Resources, Resource.Drawable.xamagonBlue))
+                .SetSmallIcon(Resource.Drawable.xamagonBlue)
+                .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);
+
+            var notification = builder.Build();
+            //_notificationManager.Notify(0, notification);
+
+            StartForeground(1, notification);
+
+            return StartCommandResult.NotSticky;
         }
 
         public override void OnDestroy()
@@ -63,6 +96,22 @@ namespace BackgroundPractice.Droid.Services
                 _cts.Cancel();
             }
             base.OnDestroy();
+        }
+
+        private void CreateNotificationChannel()
+        {
+            _notificationManager = (NotificationManager)Android.App.Application.Context.GetSystemService(Android.App.Application.NotificationService);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                var channelNameJava = new Java.Lang.String(_channelName);
+                var channel = new NotificationChannel(_channelId, channelNameJava, NotificationImportance.Default)
+                {
+                    Description = _channelDescription,
+                };
+                _notificationManager.CreateNotificationChannel(channel);
+            }
+
+            _channelInitialized = true;
         }
     }
 }
