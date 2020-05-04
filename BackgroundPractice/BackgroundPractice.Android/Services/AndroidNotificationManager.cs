@@ -85,6 +85,7 @@ namespace BackgroundPractice.Droid.Services
                 .SetContentText(message)
                 .SetLargeIcon(BitmapFactory.DecodeResource(Android.App.Application.Context.Resources, Resource.Drawable.xamagonBlue))
                 .SetSmallIcon(Resource.Drawable.xamagonBlue)
+                .SetAutoCancel(true)
                 .SetDefaults((int)NotificationDefaults.Sound|(int)NotificationDefaults.Vibrate);
 
             var notification = builder.Build();

@@ -18,8 +18,10 @@ namespace BackgroundPractice
         }
 
         Location _location;
+        
         public async Task GetLocation(CancellationToken token)
         {
+            var request = new GeolocationRequest(GeolocationAccuracy.Best);
             _location = await Xamarin.Essentials.Geolocation.GetLastKnownLocationAsync();
 
             await Task.Run(async () =>
@@ -28,9 +30,9 @@ namespace BackgroundPractice
                 {
                     token.ThrowIfCancellationRequested();
 
-                    await Task.Delay(1000);
+                    await Task.Delay(10000);
 
-                    _location = await Geolocation.GetLocationAsync();
+                    _location = await Geolocation.GetLocationAsync(request);
                     if (_location != null)
                     {
                         var message = new TickedMessage
