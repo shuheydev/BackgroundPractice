@@ -95,6 +95,8 @@ namespace BackgroundPractice.Droid.Services
 
                 _cts.Cancel();
             }
+
+            StopForeground(true);
             base.OnDestroy();
         }
 
