@@ -34,24 +34,23 @@ namespace BackgroundPractice.Droid
         }
 
 
-        JobScheduler jobScheduler;
+        private JobScheduler _jobScheduler;
+        private readonly int _jobId = 1;
         private void WireUpLongRunningTask()
         {
             MessagingCenter.Subscribe<StartLongRunningTaskMessage>(this, nameof(StartLongRunningTaskMessage), async message =>
             {
-                //var intent = new Intent(this, typeof(LongRunningTaskService));
-                //StartService(intent);
                 var javaClass = Java.Lang.Class.FromType(typeof(CountJob));
                 var componentName = new ComponentName(this, javaClass);
-                var jobBuilder=new JobInfo.Builder(1, componentName);
+                var jobBuilder = new JobInfo.Builder(_jobId, componentName);
                 var jobInfo = jobBuilder
-                //.SetPersisted(true)
-                .SetPeriodic(1)
-                .SetRequiredNetworkType(NetworkType.None)
-                .Build();
+                    //.SetPersisted(true)
+                    .SetPeriodic(1)
+                    .SetRequiredNetworkType(NetworkType.None)
+                    .Build();
 
-                jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
-                var scheduleResult = jobScheduler.Schedule(jobInfo);
+                _jobScheduler = (JobScheduler)GetSystemService(JobSchedulerService);
+                var scheduleResult = _jobScheduler.Schedule(jobInfo);
 
                 if (JobScheduler.ResultSuccess == scheduleResult)
                 {
@@ -67,10 +66,13 @@ namespace BackgroundPractice.Droid
 
             MessagingCenter.Subscribe<StopLongRunningTaskMessage>(this, nameof(StopLongRunningTaskMessage), message =>
             {
-                //var intent = new Intent(this, typeof(LongRunningTaskService));
-                //StopService(intent);
+                if (_jobScheduler == null)
+                    return;
 
-                jobScheduler.Cancel(1);
+                _jobScheduler.Cancel(_jobId);
+
+                var snackBar = Snackbar.Make(FindViewById(Android.Resource.Id.Content), "スケジュール解除", Snackbar.LengthShort);
+                snackBar.Show();
             });
         }
 
