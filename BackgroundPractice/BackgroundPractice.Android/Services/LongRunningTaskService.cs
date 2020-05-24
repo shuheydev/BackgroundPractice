@@ -20,10 +20,10 @@ namespace BackgroundPractice.Droid.Services
     [Service]
     public class LongRunningTaskService : Service
     {
-        readonly string _channelId = "foreground";
-        readonly string _channelName = "foreground";
+        readonly string _channelId = "backgroundpracticeChannel";
+        readonly string _channelName = "backgroundpracticeChannel";
         readonly string _channelDescription = "The foreground channel for notifications";
-        readonly int _pendingIntentId = 1;
+        readonly int _pendingIntentId = 134;
 
         NotificationManager _notificationManager;
         bool _channelInitialized = false;
@@ -77,8 +77,8 @@ namespace BackgroundPractice.Droid.Services
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(Android.App.Application.Context, _channelId)
                 .SetContentIntent(pendingIntent)
-                .SetContentTitle("hello")
-                .SetContentText("world")
+                .SetContentTitle("BackgroundPractice ForegroundService")
+                .SetContentText("This is foreground service")
                 .SetLargeIcon(BitmapFactory.DecodeResource(Android.App.Application.Context.Resources, Resource.Drawable.xamagonBlue))
                 .SetSmallIcon(Resource.Drawable.xamagonBlue)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate);

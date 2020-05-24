@@ -31,8 +31,8 @@ namespace BackgroundPractice
             notificationTest.Clicked += (s, e) =>
             {
                 _notificationNumber++;
-                string title = $"Local Notification #{_notificationNumber}";
-                string message = $"You have now receive {_notificationNumber} nogirications";
+                string title = $"BackgroundPractice #{_notificationNumber}";
+                string message = $"You have now receive {_notificationNumber} notifications";
                 _notificationManager.ScheduleNotification(title, message);
             };
 

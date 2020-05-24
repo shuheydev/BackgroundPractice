@@ -18,10 +18,10 @@ namespace BackgroundPractice.Droid.Services
 {
     public class AndroidNotificationManager : INotificationManager
     {
-        readonly string _channelId = "default";
-        readonly string _channelName = "default";
-        readonly string _channelDescription = "The default channel for notifications";
-        readonly int _pendingIntentId = 0;
+        readonly string _channelId = "BackgroundPracticeNotificationChannel";
+        readonly string _channelName = "BackgroundPracticeNotificationChannel";
+        readonly string _channelDescription = "The default channel for notifications(not for foregroundservice)";
+        readonly int _pendingIntentId = 111;
 
         public readonly string TitleKey = "title";
         public readonly string MessageKey = "message";
