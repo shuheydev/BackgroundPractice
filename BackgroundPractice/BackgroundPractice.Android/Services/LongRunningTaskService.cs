@@ -65,6 +65,7 @@ namespace BackgroundPractice.Droid.Services
                 }
             }, _cts.Token);
 
+            //Foregroundサービスが動いていることを表す通知を表示
             if (!_channelInitialized)
             {
                 CreateNotificationChannel();
